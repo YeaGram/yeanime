@@ -5,20 +5,59 @@ import Image from "next/image";
 export default function Card() {
   const [homeAnime, setHomeAnime] = useState([]);
   const [pageButton, setPageButton] = useState();
+  const [getType, setGetType] = useState("");
+  const [getFilter, setGetFilter] = useState("");
   let [page, setPage] = useState(1);
-  const path = "https://api.jikan.moe/v4/";
+  const getAnime = "https://api.jikan.moe/v4/anime";
+  const getTopAnime = "https://api.jikan.moe/v4/top/anime?";
+
+  const getThatAnime = (target, spec) => {
+    fetch(spec)
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        let datas = data.data;
+        target(datas);
+      })
+      .catch((err) => console.log(err));
+  };
 
   useEffect(() => {
-    const xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = () => {
-      if (xhr.readyState == 4 && xhr.status == 200) {
-        const data = JSON.parse(xhr.responseText).data;
-        setHomeAnime(data);
-      }
-    };
-    xhr.open("get", `${path}top/anime?page=${page}&limit=4`);
-    xhr.send();
-  }, [page]);
+    const params = new URLSearchParams({
+      type: getType,
+      filter: getFilter,
+      page: page,
+      limit: 10,
+    });
+    const sle = document.querySelector("#selGroup").children;
+    for (let i = 0; i < sle.length; i++) {
+      const element = sle[i];
+      element.addEventListener("click", (e) => {
+        setGetType(element.value);
+      });
+    }
+    const sfl = document.querySelector("#selFilter").children;
+    for (let i = 0; i < sfl.length; i++) {
+      const element = sfl[i];
+      element.addEventListener("click", (e) => {
+        setGetFilter(element.value);
+      });
+    }
+
+    getThatAnime(setHomeAnime, getTopAnime + params.toString());
+
+    // AJax
+    // const xhr = new XMLHttpRequest();
+    // xhr.onreadystatechange = () => {
+    //   if (xhr.readyState == 4 && xhr.status == 200) {
+    //     const data = JSON.parse(xhr.responseText).data;
+    //     setHomeAnime(data);
+    //   }
+    // };
+    // xhr.open("get", `${getAnime}top/anime?page=${page}&limit=4`);
+    // xhr.send();
+  }, [page, getType, getFilter]);
 
   function addPage() {
     setPage((page = page + 1));
@@ -59,7 +98,7 @@ export default function Card() {
       <div className="w-full flex justify-between flex-wrap">
         {homeAnime.map((item) => (
           <div
-            className="w-1/2 max-w-[13rem] my-1  mx-auto  h-auto flex flex-col justify-between items-center border-2"
+            className="w-1/2 max-w-[13rem] my-1  mx-auto  h-auto flex flex-col justify-between items-center border-2 rounded-t-xl overflow-hidden"
             key={item.mal_id}
           >
             <div className="w-full">
@@ -76,15 +115,16 @@ export default function Card() {
                   {item.title}
                 </h3>
                 <ul className="flex flex-col text-sm text-gray-700 mt-1">
+                  <li className="leading-0">Ranking : {item.rank} </li>
                   <li className="leading-0">Duration : {item.duration} </li>
-                  <li className="leading-0 ">
+                  {/* <li className="leading-0 ">
                     <p>Genre :</p>
                     <div className="w-full tracking-tighter indent-4">
                       {item.genres.map((genres) => (
                         <p key={genres.mal_id}>{genres.name}</p>
                       ))}
                     </div>
-                  </li>
+                  </li> */}
                 </ul>
               </div>
             </div>
