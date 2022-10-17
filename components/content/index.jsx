@@ -4,7 +4,9 @@ import Card from "./card/card";
 export default function Content() {
   return (
     <div className="mt-20 px-2">
-      <SectionHeader>Top Anime List</SectionHeader>{" "}
+      <SectionHeader quote="data yang ditampilkan berdasarkan urutan skor.">
+        Top Anime List{" "}
+      </SectionHeader>
       <div className="flex gap-4 my-2 justify-center">
         <div className="flex items-center gap-2">
           <h4 className="">Type : </h4>
@@ -30,10 +32,10 @@ export default function Content() {
             className="block px-2 py-2 rounded-lg"
           >
             <option value="">Default</option>
-            <option value="airing">airing</option>
-            <option value="upcoming">upcoming</option>
-            <option value="bypopularity">bypopularity</option>
-            <option value="favorite">favorite</option>
+            <option value="airing">Airing</option>
+            <option value="upcoming">Upcoming</option>
+            <option value="bypopularity">Popularity</option>
+            <option value="favorite">Favorite</option>
           </select>
         </div>
       </div>

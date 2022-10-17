@@ -8,6 +8,10 @@ module.exports = {
         Merriweather: "Merriweather",
       },
       keyframes: {
+        pops: {
+          "0%": { transform: "scale(0%)" },
+          "100%": { transform: "scale(100%)" },
+        },
         burgerAnimation: {
           "0%": { height: "20px", transform: "rotate(0deg)" },
           // "20%, 80%": { transform: "rotate(180deg)" },

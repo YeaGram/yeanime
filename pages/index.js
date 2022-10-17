@@ -12,7 +12,6 @@ export default function Home() {
       </Head>
       <Header />
       <Content />
-      <footer className="mx-auto w-fit py-4">masih beta :v</footer>
     </div>
   );
 }

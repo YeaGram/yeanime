@@ -30,20 +30,14 @@ export default function Card() {
       page: page,
       limit: 10,
     });
-    const sle = document.querySelector("#selGroup").children;
-    for (let i = 0; i < sle.length; i++) {
-      const element = sle[i];
-      element.addEventListener("click", (e) => {
-        setGetType(element.value);
-      });
-    }
-    const sfl = document.querySelector("#selFilter").children;
-    for (let i = 0; i < sfl.length; i++) {
-      const element = sfl[i];
-      element.addEventListener("click", (e) => {
-        setGetFilter(element.value);
-      });
-    }
+    const sle = document.querySelector("#selGroup");
+    sle.addEventListener("change", (e) => {
+      setGetType(sle.value);
+    });
+    const sfl = document.querySelector("#selFilter");
+    sfl.addEventListener("change", (e) => {
+      setGetFilter(sfl.value);
+    });
 
     getThatAnime(setHomeAnime, getTopAnime + params.toString());
 
@@ -71,13 +65,13 @@ export default function Card() {
         <>
           <button
             onClick={addPage}
-            className="bg-gray-500 text-white border-b-4 border-gray-600 hover:bg-gray-400 px-4 rounded-sm py-2"
+            className="bg-gray-500 animate-[pops_300ms_ease] text-white border-b-4 border-gray-600 hover:bg-gray-400 px-4 rounded-sm py-2"
           >
             Next Page
           </button>
           <button
             onClick={removePage}
-            className="bg-gray-500 text-white border-b-4 border-gray-600 hover:bg-gray-400 px-4 rounded-sm py-2"
+            className="bg-gray-500 text-white border-b-4 animate-[pops_300ms_ease] border-gray-600 hover:bg-gray-400 px-4 rounded-sm py-2"
           >
             Previous Page
           </button>
@@ -85,7 +79,7 @@ export default function Card() {
       ) : (
         <button
           onClick={addPage}
-          className="bg-gray-500 text-white border-b-4 border-gray-600 hover:bg-gray-400 px-4 rounded-sm py-2"
+          className="bg-gray-500 text-white border-b-4 animate-[pops_300ms_ease] border-gray-600 hover:bg-gray-400 px-4 rounded-sm py-2"
         >
           Next Page
         </button>
@@ -115,8 +109,13 @@ export default function Card() {
                   {item.title}
                 </h3>
                 <ul className="flex flex-col text-sm text-gray-700 mt-1">
-                  <li className="leading-0">Ranking : {item.rank} </li>
-                  <li className="leading-0">Duration : {item.duration} </li>
+                  <li className="leading-0">Score : {item.score} </li>
+                  <li className="leading-0">
+                    Popularity Rank : {item.popularity}{" "}
+                  </li>
+                  <li className="leading-0">Sumber : {item.source} </li>
+                  <li className="leading-0">Status : {item.status} </li>
+                  <li className="leading-0">Tahun : {item.year} </li>
                   {/* <li className="leading-0 ">
                     <p>Genre :</p>
                     <div className="w-full tracking-tighter indent-4">

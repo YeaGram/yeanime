@@ -5,26 +5,32 @@ import HamburgerButton from "../button/hamburger";
 
 export default function NavigationBar() {
   const [menu, setMenu] = useState(false);
-  const [wpos, setWpos] = useState();
-  const handleWindow = () => {
-    setWpos(window.scrollY);
+  const [wpos, setWpos] = useState(0);
+  const handleScroll = () => {
+    const position = window.scrollY;
+    setWpos(position);
   };
-  useEffect(() => {
-    window.addEventListener("scroll", handleWindow);
-    return window.removeEventListener("scroll", handleWindow);
-  }, []);
 
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
   return (
     <nav className={`fixed z-10 w-full top-0`}>
-      <div className="relative h-14 flex items-center justify-center">
+      <div className="relative h-16 flex items-center justify-center">
         <div
-          className={`flex justify-between items-center w-full px-5 z-10 backdrop-blur-sm h-full bg-gradient-to-b from-white to-gray-100/90 duration-300 border-b-2 ${
+          className={`flex justify-between items-center w-full px-5 z-10 backdrop-blur-sm h-full bg-gradient-to-b from-white duration-1000 transition-all to-gray-100/50 ${
+            wpos > 250 ? " bg-rose-600/30" : " to-gray-100/50"
+          } duration-300 border-b-2 ${
             menu ? "border-rose-500 shadow-lg" : "border-white"
           } `}
         >
           <div className="flex items-center sm:justify-between w-full ">
             <Brand />
-            <div className="hidden ml-2 sm:flex">
+            <div className="hidden ml-2 sm:flex ">
               <NavItems url="#">Home</NavItems>
               <NavItems url="#">About</NavItems>
               <NavItems url="#">Contact</NavItems>
@@ -40,7 +46,7 @@ export default function NavigationBar() {
         <div
           className={`${
             menu ? "top-full" : "top-0 -translate-y-full "
-          } flex flex-col absolute transition-all w-full bg-gray-100/90 backdrop-blur-sm py-4 px-5`}
+          } flex flex-col absolute transition-all w-full bg-gray-100/90 backdrop-blur-sm  px-5 py-5`}
         >
           <NavItems url="#">Home</NavItems>
           <NavItems url="#">About</NavItems>
