@@ -54,10 +54,6 @@ export default function Card() {
     );
   }, [page]);
 
-  useEffect(() => {
-    console.log(page);
-  }, [page]);
-
   return (
     <div>
       <div className="w-full flex justify-between flex-wrap">
