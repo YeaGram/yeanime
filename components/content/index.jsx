@@ -1,11 +1,10 @@
-import Card from "./card";
+import SectionHeader from "../header/sectionHeader";
+import Card from "./card/card";
 
 export default function Content() {
   return (
     <div className="my-5 px-2">
-      <h1 className="font-Raleway text-4xl font-bold text-gray-700 indent-5 py-2 text-center">
-        AnimeList
-      </h1>
+      <SectionHeader>Anime List</SectionHeader>
       <div className="container mx-auto">
         <Card />
       </div>

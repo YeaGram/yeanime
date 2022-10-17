@@ -10,15 +10,13 @@ export default function Card() {
 
   useEffect(() => {
     const xhr = new XMLHttpRequest();
-
     xhr.onreadystatechange = () => {
       if (xhr.readyState == 4 && xhr.status == 200) {
         const data = JSON.parse(xhr.responseText).data;
         setHomeAnime(data);
       }
     };
-
-    xhr.open("get", `${path}top/anime?page=${page}`);
+    xhr.open("get", `${path}top/anime?page=${page}&limit=4`);
     xhr.send();
   }, [page]);
 
