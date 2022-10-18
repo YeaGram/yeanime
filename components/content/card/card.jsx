@@ -1,6 +1,9 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import { MyRequest } from "../../funct/doRequest";
+import { MyChangeState } from "../../funct/doChangeState";
+import ContentBtn from "../../button/contentNav";
 
 export default function Card() {
   const [homeAnime, setHomeAnime] = useState([]);
@@ -8,95 +11,69 @@ export default function Card() {
   const [getType, setGetType] = useState("");
   const [getFilter, setGetFilter] = useState("");
   let [page, setPage] = useState(1);
+
   const getAnime = "https://api.jikan.moe/v4/anime";
   const getTopAnime = "https://api.jikan.moe/v4/top/anime?";
 
-  const getThatAnime = (target, spec) => {
-    fetch(spec)
-      .then((res) => {
-        return res.json();
-      })
-      .then((data) => {
-        let datas = data.data;
-        target(datas);
-      })
-      .catch((err) => console.log(err));
-  };
+  const params = new URLSearchParams({
+    type: getType,
+    filter: getFilter,
+    page: page,
+    limit: 10,
+  });
 
   useEffect(() => {
-    const params = new URLSearchParams({
-      type: getType,
-      filter: getFilter,
-      page: page,
-      limit: 10,
-    });
-    const sle = document.querySelector("#selGroup");
-    sle.addEventListener("change", (e) => {
-      setGetType(sle.value);
-    });
-    const sfl = document.querySelector("#selFilter");
-    sfl.addEventListener("change", (e) => {
-      setGetFilter(sfl.value);
-    });
+    MyChangeState(setGetFilter, "#selFilter");
+    MyChangeState(setGetType, "#selGroup");
+    MyRequest(setHomeAnime, getTopAnime + params.toString());
 
-    getThatAnime(setHomeAnime, getTopAnime + params.toString());
-
-    // AJax
-    // const xhr = new XMLHttpRequest();
-    // xhr.onreadystatechange = () => {
-    //   if (xhr.readyState == 4 && xhr.status == 200) {
-    //     const data = JSON.parse(xhr.responseText).data;
-    //     setHomeAnime(data);
-    //   }
-    // };
-    // xhr.open("get", `${getAnime}top/anime?page=${page}&limit=4`);
-    // xhr.send();
-  }, [page, getType, getFilter]);
-
-  function addPage() {
-    setPage((page = page + 1));
-  }
-  function removePage() {
-    setPage((page = page - 1));
-  }
-  useEffect(() => {
     setPageButton(
       page > 1 ? (
-        <>
-          <button
-            onClick={addPage}
-            className="bg-gray-500 animate-[pops_300ms_ease] text-white border-b-4 border-gray-600 hover:bg-gray-400 px-4 rounded-sm py-2"
-          >
-            Next Page
-          </button>
-          <button
-            onClick={removePage}
-            className="bg-gray-500 text-white border-b-4 animate-[pops_300ms_ease] border-gray-600 hover:bg-gray-400 px-4 rounded-sm py-2"
-          >
-            Previous Page
-          </button>
-        </>
+        <div className="flex w-full justify-center gap-2">
+          <div className="flex w-full justify-end">
+            <ContentBtn
+              setToPage={setPage}
+              currentPage={page}
+              operator={true}
+              pageController={true}
+            >
+              Next Page
+            </ContentBtn>
+          </div>
+          <div className="flex w-full justify-start">
+            <ContentBtn
+              setToPage={setPage}
+              currentPage={page}
+              operator={false}
+              pageController={true}
+            >
+              Previous Page
+            </ContentBtn>
+          </div>
+        </div>
       ) : (
-        <button
-          onClick={addPage}
-          className="bg-gray-500 text-white border-b-4 animate-[pops_300ms_ease] border-gray-600 hover:bg-gray-400 px-4 rounded-sm py-2"
+        <ContentBtn
+          setToPage={setPage}
+          currentPage={page}
+          operator={true}
+          pageController={true}
         >
           Next Page
-        </button>
+        </ContentBtn>
       )
     );
-  }, [page]);
+  }, [page, getType, getFilter]);
 
   return (
     <div>
-      <div className="w-full flex justify-between flex-wrap">
+      <div className="w-full flex justify-center flex-wrap">
         {homeAnime.map((item) => (
           <div
-            className="w-1/2 max-w-[13rem] my-1  mx-auto  h-auto flex flex-col justify-between items-center border-2 rounded-t-xl overflow-hidden"
+            className="w-full max-w-[13rem] m-1 h-auto flex flex-col justify-evenly items-center shadow-md rounded-t-xl overflow-hidden"
             key={item.mal_id}
           >
-            <div className="w-full">
-              <div className="w-full max-w-[13rem]  h-[20rem] shadow-md relative group">
+            <div className="w-full h-full">
+              <div className="w-full  h-[18rem] shadow-md relative group">
                 <Image
                   src={item.images.webp.image_url}
                   layout="fill"
@@ -114,22 +91,20 @@ export default function Card() {
                     Popularity Rank : {item.popularity}{" "}
                   </li>
                   <li className="leading-0">Sumber : {item.source} </li>
-                  <li className="leading-0">Status : {item.status} </li>
-                  <li className="leading-0">Tahun : {item.year} </li>
                   {/* <li className="leading-0 ">
                     <p>Genre :</p>
                     <div className="w-full tracking-tighter indent-4">
                       {item.genres.map((genres) => (
                         <p key={genres.mal_id}>{genres.name}</p>
-                      ))}
-                    </div>
+                        ))}
+                        </div>
                   </li> */}
                 </ul>
               </div>
             </div>
             <div className="py-3 w-full fit px-4 text-blue-500 underline text-right text-xs">
-              <Link href={item.url}>
-                <a target="_blank">Selengkapnya</a>
+              <Link href={`/anime/${item.mal_id}`}>
+                <a>Selengkapnya</a>
               </Link>
             </div>
           </div>
@@ -139,3 +114,34 @@ export default function Card() {
     </div>
   );
 }
+
+// Fetch ================================>
+// const getThatAnime = (target, spec) => {
+//   fetch(spec)
+//     .then((res) => {
+//       return res.json();
+//     })
+//     .then((data) => {
+//       let datas = data.data;
+//       target(datas);
+//     })
+//     .catch((err) => console.log(err));
+// };
+
+// Render ==============================>
+// const sfl = document.querySelector("#selFilter");
+// sfl.addEventListener("change", (e) => {
+//   setGetFilter(sfl.value);
+// });
+// getThatAnime(setHomeAnime, getTopAnime + params.toString());
+
+// AJax ==========================>
+// const xhr = new XMLHttpRequest();
+// xhr.onreadystatechange = () => {
+//   if (xhr.readyState == 4 && xhr.status == 200) {
+//     const data = JSON.parse(xhr.responseText).data;
+//     setHomeAnime(data);
+//   }
+// };
+// xhr.open("get", `${getAnime}top/anime?page=${page}&limit=4`);
+// xhr.send();
