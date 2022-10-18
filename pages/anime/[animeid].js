@@ -1,39 +1,37 @@
 import Header from "../../components/header";
+import axios from "axios";
 import Image from "next/image";
 import SectionHeader from "../../components/header/sectionHeader";
 import { FaLocationArrow } from "react-icons/fa";
 import Link from "next/link";
-
-export async function getStaticPaths() {
-  const res = await fetch("https://api.jikan.moe/v4/top/anime");
-  const datas = await res.json();
-
-  const paths = datas.data.map((anime) => ({
-    params: { animeid: anime.mal_id.toString() },
-  }));
-
-  return {
-    paths,
-    fallback: false,
-  };
-}
-
-export async function getStaticProps(context) {
-  const id = context.params.animeid;
-  const res = await fetch(`https://api.jikan.moe/v4/anime/${id}/full`);
-
-  const datas = await res.json();
-  console.log(datas.data);
-  return {
-    props: { anime: datas.data },
-  };
-}
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import { MyRequest } from "../../components/funct/doRequest";
 
 export default function AniIds({ anime }) {
-  return (
-    <>
-      <Header />
-      <main className="mt-24">
+  // const router = useRouter();
+  // const { animeid } = router.query;
+  // const [anime, setAnime] = useState([]);
+
+  // useEffect(() => {
+  //   const url = "https://api.jikan.moe/v4/anime/1/full";
+  //   axios
+  //     .get(url)
+  //     .then((res) => {
+  //       console.log(res);
+  //       setAnime(anime.data);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // }, []);
+
+  console.log(anime);
+  return <div></div>;
+}
+
+{
+  /* <main className="mt-24">
         <SectionHeader>{anime.title}.</SectionHeader>
         <div className="flex flex-col md:flex-row items-center md:items-start md:pt-10">
           <div className="px-10 box-content">
@@ -118,7 +116,36 @@ export default function AniIds({ anime }) {
             </div>
           </div>
         </div>
-      </main>
-    </>
+      </main> */
+}
+
+export async function getStaticProps(context) {
+  const id = context.params.animeid;
+  const anime = await fetch(`https://api.jikan.moe/v4/anime/${id}/full`).then(
+    (r) => r.json()
   );
+  console.log(typeof anime.data);
+
+  return {
+    props: { anime: anime.data },
+  };
+}
+
+export async function getStaticPaths() {
+  const animes = await fetch("https://api.jikan.moe/v4/top/anime?").then((r) =>
+    r.json()
+  );
+
+  console.log(typeof animes.data);
+  return {
+    paths: animes.data.map((anime) => {
+      const animeid = anime.mal_id.toString();
+      return {
+        params: {
+          animeid,
+        },
+      };
+    }),
+    fallback: false,
+  };
 }

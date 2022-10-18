@@ -19,7 +19,7 @@ export default function Card() {
     type: getType,
     filter: getFilter,
     page: page,
-    limit: 10,
+    limit: 3,
   });
 
   useEffect(() => {
