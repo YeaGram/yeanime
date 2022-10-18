@@ -211,7 +211,7 @@ export default function AniIds({ anime }) {
 export async function getStaticProps(context) {
   const id = context.params.animeid;
   const res = await fetch(`https://api.jikan.moe/v4/anime/${id}/full`);
-  const data = JSON.parse(res);
+  const anime = JSON.parse(res);
 
   return {
     props: { anime: anime.data || null },
