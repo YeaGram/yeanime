@@ -25,7 +25,7 @@ export default function AniIds({ anime }) {
   //       console.log(err);
   //     });
   // }, []);
-
+  console.log(anime);
   return (
     <div>
       <Header />
@@ -210,10 +210,8 @@ export default function AniIds({ anime }) {
 
 export async function getStaticProps(context) {
   const id = context.params.animeid;
-  const anime = await fetch(`https://api.jikan.moe/v4/anime/${id}/full`).then(
-    (r) => r.json()
-  );
-  console.log(typeof anime.data);
+  const res = await fetch(`https://api.jikan.moe/v4/anime/${id}/full`);
+  const data = JSON.parse(res);
 
   return {
     props: { anime: anime.data || null },
@@ -225,7 +223,6 @@ export async function getStaticPaths() {
     r.json()
   );
 
-  console.log(typeof animes.data);
   return {
     paths: animes.data.map((anime) => {
       const animeid = anime.mal_id.toString();
