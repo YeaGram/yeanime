@@ -127,7 +127,7 @@ export async function getStaticProps(context) {
   console.log(typeof anime.data);
 
   return {
-    props: { anime: anime.data },
+    props: { anime: anime.data || null },
   };
 }
 
