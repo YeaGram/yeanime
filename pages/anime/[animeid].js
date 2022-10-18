@@ -22,7 +22,7 @@ export default function AniIds() {
     axios
       .get(url)
       .then((res) => {
-        console.log(res);
+        // console.log(res);
 
         setLoading(false);
         setAnime(res.data.data);
