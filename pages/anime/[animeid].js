@@ -7,25 +7,34 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { MyRequest } from "../../components/funct/doRequest";
+import ContentLoading from "../../components/navigation/loading";
 
-export default function AniIds({ anime }) {
-  // const router = useRouter();
-  // const { animeid } = router.query;
-  // const [anime, setAnime] = useState([]);
+export default function AniIds() {
+  const router = useRouter();
+  const { animeid } = router.query;
+  const [anime, setAnime] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  // useEffect(() => {
-  //   const url = "https://api.jikan.moe/v4/anime/1/full";
-  //   axios
-  //     .get(url)
-  //     .then((res) => {
-  //       console.log(res);
-  //       setAnime(anime.data);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // }, []);
-  console.log(anime);
+  useEffect(() => {
+    setLoading(true);
+    let url = `https://api.jikan.moe/v4/anime/${animeid}/full`;
+    if (!router.isReady) return;
+    axios
+      .get(url)
+      .then((res) => {
+        console.log(res);
+
+        setLoading(false);
+        setAnime(res.data.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [router.isReady]);
+
+  if (loading) return <ContentLoading />;
+  if (!anime) return <div>No Data</div>;
+
   return (
     <div>
       <Header />
@@ -208,30 +217,30 @@ export default function AniIds({ anime }) {
       </main> */
 }
 
-export async function getStaticProps(context) {
-  const id = context.params.animeid;
-  const res = await fetch(`https://api.jikan.moe/v4/anime/${id}/full`);
-  const anime = JSON.parse(res);
+// export async function getServerSideProps(context) {
+//   const id = context.params.animeid;
+//   const res = await fetch(`https://api.jikan.moe/v4/anime/${id}/full`);
+//   const anime = JSON.parse(res);
 
-  return {
-    props: { anime: anime.data || null },
-  };
-}
+//   return {
+//     props: { anime: anime.data || null },
+//   };
+// }
 
-export async function getStaticPaths() {
-  const animes = await fetch("https://api.jikan.moe/v4/top/anime?").then((r) =>
-    r.json()
-  );
+// export async function getStaticPaths() {
+//   const animes = await fetch("https://api.jikan.moe/v4/top/anime?").then((r) =>
+//     r.json()
+//   );
 
-  return {
-    paths: animes.data.map((anime) => {
-      const animeid = anime.mal_id.toString();
-      return {
-        params: {
-          animeid,
-        },
-      };
-    }),
-    fallback: false,
-  };
-}
+//   return {
+//     paths: animes.data.map((anime) => {
+//       const animeid = anime.mal_id.toString();
+//       return {
+//         params: {
+//           animeid,
+//         },
+//       };
+//     }),
+//     fallback: false,
+//   };
+// }

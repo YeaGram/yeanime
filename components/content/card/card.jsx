@@ -12,14 +12,14 @@ export default function Card() {
   const [getFilter, setGetFilter] = useState("");
   let [page, setPage] = useState(1);
 
-  const getAnime = "https://api.jikan.moe/v4/anime";
+  // const getAnime = "https://api.jikan.moe/v4/anime";
   const getTopAnime = "https://api.jikan.moe/v4/top/anime?";
 
   const params = new URLSearchParams({
     type: getType,
     filter: getFilter,
     page: page,
-    limit: 3,
+    limit: 10,
   });
 
   useEffect(() => {
